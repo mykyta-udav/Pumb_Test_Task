@@ -1,4 +1,4 @@
-package com.example.pumb_test_task.service.iml;
+package com.example.pumb_test_task.service.impl;
 
 import com.example.pumb_test_task.model.Animal;
 import com.example.pumb_test_task.repository.AnimalRepository;
