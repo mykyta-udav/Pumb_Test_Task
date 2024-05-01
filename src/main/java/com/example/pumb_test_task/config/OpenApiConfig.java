@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         info = @Info(
                 title = "Animal API",
                 version = "1.0",
-                description = "API for managing animals and their categories"
+                description = "This API allows clients to upload and process animal data files in CSV and XML formats."
         ),
         servers = @Server(url = "http://localhost:8080")
 )

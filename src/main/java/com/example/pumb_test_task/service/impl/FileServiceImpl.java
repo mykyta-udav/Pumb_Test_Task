@@ -37,6 +37,9 @@ public class FileServiceImpl implements FileService {
     }
 
     private void processCSV(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return;
+        }
         try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             CsvToBean<Animal> csvToBean = new CsvToBeanBuilder<Animal>(fileReader)
                     .withType(Animal.class)

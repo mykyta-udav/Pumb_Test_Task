@@ -1,6 +1,7 @@
 package com.example.pumb_test_task.controller;
 
 import com.example.pumb_test_task.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,11 @@ public class FileUploadController {
     private FileService fileService;
 
     @PostMapping("/upload")
+    @Operation(summary = "Upload a file", description = "Uploads a file and processes it to store animal data in the database.")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("File is empty");
+        }
         try {
             fileService.uploadFile(file);
 

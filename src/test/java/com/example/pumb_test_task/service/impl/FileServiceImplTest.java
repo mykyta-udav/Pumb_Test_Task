@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class FileServiceImplTest {
@@ -44,5 +45,33 @@ public class FileServiceImplTest {
         fileService.uploadFile(file);
 
         verify(animalRepository, times(1)).save(any(Animal.class));
+    }
+
+    @Test
+    public void testProcessUnsupportedFileFormat() {
+        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "Some content".getBytes());
+
+        assertThrows(IllegalArgumentException.class, () -> fileService.uploadFile(file),
+                "Unsupported file format exception was expected.");
+    }
+
+    @Test
+    public void testProcessEmptyCSVFile() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "empty.csv", "text/csv", "".getBytes());
+
+        fileService.uploadFile(file);
+
+        verify(animalRepository, never()).saveAll(any());
+    }
+
+    @Test
+    public void testDatabaseErrorDuringSave(){
+        when(animalRepository.saveAll(any())).thenThrow(new RuntimeException("Database error"));
+
+        String csvData = "name,type,sex,weight,cost\nBuddy,dog,male,50,300";
+        MockMultipartFile file = new MockMultipartFile("file", "test.csv", "text/csv", csvData.getBytes());
+
+        assertThrows(RuntimeException.class, () -> fileService.uploadFile(file),
+                "Expected a RuntimeException due to a database error.");
     }
 }
